@@ -79,16 +79,17 @@ class CodeController extends Controller
                 'message' => '请选择正确类型',
             ]);
         }
-        $result = \App\Models\Code::create([
-            'type' => $data['type'],
-            'code' => md5(time() . Str::random(32) . Str::random(32) . Str::random(32) . time()),
-            'created_user_id' => Auth::id(),
-        ]);
-
-        if(!$result) {
+        if($data['number'] < 1) {
             return Redirect::back()->with('tips', [
                 'status' => false,
-                'message' => '生成授权码失败',
+                'message' => '数量必须大于 0',
+            ]);
+        }
+        for($i = 0; $i < $data['number']; $i++) {
+            $result = \App\Models\Code::create([
+                'type' => $data['type'],
+                'code' => md5(time() . Str::random(32) . Str::random(32) . Str::random(32) . time()),
+                'created_user_id' => Auth::id(),
             ]);
         }
 

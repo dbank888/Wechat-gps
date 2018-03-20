@@ -48,13 +48,16 @@
                         <form method="POST" action="{{ route('code.store') }}" onsubmit="return handleLoading()">
                             @csrf
                             <div class="input-group">
-                                <select class="custom-select" name="type">
-                                    <option selected>请选择类型</option>
-                                    <option value="day">天卡</option>
-                                    <option value="week">周卡</option>
-                                    <option value="month">月卡</option>
-                                    <option value="year">年卡</option>
-                                </select>
+                                <div class="input-group-prepend">
+                                    <select class="custom-select" name="type">
+                                        <option selected>请选择类型</option>
+                                        <option value="day">天卡</option>
+                                        <option value="week">周卡</option>
+                                        <option value="month">月卡</option>
+                                        <option value="year">年卡</option>
+                                    </select>
+                                </div>
+                                <input type="number" class="form-control" name="number" placeholder="数量">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="submit">立即生成</button>
                                 </div>
@@ -104,7 +107,7 @@
                                             @if($code->status)
                                                 <a href="{{url("/code/setStatus/$code->id")}}" class="btn btn-danger btn-sm">禁用</a>
                                             @else
-                                                <a href="{{url("/code/setStatus/$code->id")}}" class="btn btn-danger btn-sm">启用</a>
+                                                <a href="{{url("/code/setStatus/$code->id")}}" class="btn btn-primary btn-sm">启用</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -129,40 +132,6 @@
                     </div>
                 </div>
             @endif
-
-            <div class="card mt-4">
-                <div class="card-header">授权查询</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('code.search') }}" onsubmit="return handleLoading()">
-                        @csrf
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit">立即查询</button>
-                            </div>
-                        </div>
-                    </form>
-
-                    @if(session('search'))
-                        @if(session('search')['status'])
-                            <div class="alert alert-success search-alert mt-4">
-                        @else
-                            <div class="alert alert-danger search-alert mt-4">
-                        @endif
-                                {{ session('search')['message'] }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        <script>
-                            setTimeout(function() {
-                                $(".search-alert").alert('close');
-                            }, 10000);
-                        </script>
-                    @endif
-                </div>
-            </div>
 
             <div class="card mt-4">
                 <div class="card-header">授权激活</div>
@@ -199,6 +168,40 @@
             </div>
 
             <div class="card mt-4">
+                <div class="card-header">授权查询</div>
+
+                <div class="card-body">
+                    <form method="POST" action="{{ route('code.search') }}" onsubmit="return handleLoading()">
+                        @csrf
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">立即查询</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    @if(session('search'))
+                        @if(session('search')['status'])
+                            <div class="alert alert-success search-alert mt-4">
+                        @else
+                            <div class="alert alert-danger search-alert mt-4">
+                        @endif
+                                {{ session('search')['message'] }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <script>
+                                setTimeout(function() {
+                                    $(".search-alert").alert('close');
+                                }, 10000);
+                            </script>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card mt-4">
                 <div class="card-header">定位中心</div>
 
                 <div class="card-body">
@@ -222,10 +225,14 @@
                                         <th scope="row">{{$code->id}}</th>
                                         <td>{{$code->type_name}}</td>
                                         <td>
-                                            @if($code->expired_at < \Carbon\Carbon::now())
-                                                <span class="badge badge-danger">过期</span>
+                                            @if($code->status)
+                                                @if($code->expired_at < \Carbon\Carbon::now())
+                                                    <span class="badge badge-danger">过期</span>
+                                                @else
+                                                    <span class="badge badge-primary">正常</span>
+                                                @endif
                                             @else
-                                                <span class="badge badge-primary">正常</span>
+                                                <span class="badge badge-danger">已禁用</span>
                                             @endif
                                         </td>
                                         <td>
@@ -239,7 +246,11 @@
                                         <td>{{$code->used_at}}</td>
                                         <td>{{$code->expired_at}}</td>
                                         <td>
-                                            <a href="{{url("/code/$code->id")}}" class="btn btn-primary btn-sm">查看</a>
+                                            @if($code->status)
+                                                <a href="{{url("/code/$code->id")}}" class="btn btn-primary btn-sm">查看</a>
+                                            @else
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm disabled">查看</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
