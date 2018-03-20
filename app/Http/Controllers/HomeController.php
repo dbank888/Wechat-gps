@@ -25,8 +25,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $dataset = [];
-        if(Auth::user()['email'] === '624508914@qq.com') {
-            $dataset['codes'] = \App\Models\Code::where('user_id', 0)->orderBy('id', 'desc')->paginate(5, ['*'], 'c_page');
+        if(in_array(Auth::user()['email'], config('app.auth_email'))) {
+            $dataset['codes'] = \App\Models\Code::where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(5, ['*'], 'c_page');
         }
 
         $dataset['activation_codes'] = \App\Models\Code::where('user_id', Auth::id())->orderBy('id', 'desc')->paginate(10, ['*'], 'a_page');

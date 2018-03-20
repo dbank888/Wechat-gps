@@ -19,6 +19,11 @@ class CodeController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * 查看授权码详情
+     * @param $id
+     * @return $this
+     */
     public function show($id) {
         $code = \App\Models\Code::where('id', $id)->first();
         if(!$code) {
@@ -33,13 +38,35 @@ class CodeController extends Controller
     }
 
     /**
+     * 设置授权码状态
+     * @param $id
+     * @return mixed
+     */
+    public function setStatus($id) {
+        $code = \App\Models\Code::where('id', $id)->first();
+        if(!$code) {
+            return Redirect::back()->with('tips', [
+                'status' => false,
+                'message' => '定位链接不存在',
+            ]);
+        }
+        $code->status = intval(!$code->status);
+        $code->save();
+
+        return Redirect::back()->with('tips', [
+            'status' => true,
+            'message' => '操作成功',
+        ]);
+    }
+
+    /**
      * 生成激活码
      *
      * @param Request $request
      * @return mixed
      */
     public function store(Request $request) {
-        if(Auth::user()['email'] !== '624508914@qq.com') {
+        if(!in_array(Auth::user()['email'], config('app.auth_email'))) {
             return Redirect::back()->with('tips', [
                 'status' => false,
                 'message' => '您没有权限生成授权码',
@@ -54,7 +81,8 @@ class CodeController extends Controller
         }
         $result = \App\Models\Code::create([
             'type' => $data['type'],
-            'code' => md5(time() . Str::random(32) . Str::random(32) . Str::random(32) . time())
+            'code' => md5(time() . Str::random(32) . Str::random(32) . Str::random(32) . time()),
+            'created_user_id' => Auth::id(),
         ]);
 
         if(!$result) {
@@ -81,15 +109,21 @@ class CodeController extends Controller
         $data = $request->all();
         $result = \App\Models\Code::where('code', $data['code'])->first();
         if(!$data['code'] || !$result) {
-            return Redirect::back()->with('tips', [
+            return Redirect::back()->with('activation', [
                 'status' => false,
                 'message' => '授权码不存在',
             ]);
         }
         if($result->user_id) {
-            return Redirect::back()->with('tips', [
+            return Redirect::back()->with('activation', [
                 'status' => false,
                 'message' => '授权码已被激活',
+            ]);
+        }
+        if(!$result->status) {
+            return Redirect::back()->with('activation', [
+                'status' => false,
+                'message' => '授权码已被禁用',
             ]);
         }
         $result->user_id = Auth::id();
@@ -111,15 +145,51 @@ class CodeController extends Controller
         }
         $res = $result->save();
         if($res === false) {
-            return Redirect::back()->with('tips', [
+            return Redirect::back()->with('activation', [
                 'status' => false,
                 'message' => '激活失败',
             ]);
         }
 
-        return Redirect::back()->with('tips', [
+        return Redirect::back()->with('activation', [
             'status' => true,
             'message' => '激活成功',
+        ]);
+    }
+
+    /**
+     * 查询授权码
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function search(Request $request)
+    {
+        $data = $request->all();
+        $result = \App\Models\Code::where('code', $data['code'])->first();
+        if(!$data['code'] || !$result) {
+            return Redirect::back()->with('search', [
+                'status' => false,
+                'message' => '授权码: ' . $data['code'] . ' 不存在',
+            ]);
+        }
+        if($result->user_id) {
+            return Redirect::back()->with('search', [
+                'status' => false,
+                'message' => '授权码: ' . $data['code'] . ' 已被激活',
+            ]);
+        }
+
+        if(!$result->status) {
+            return Redirect::back()->with('search', [
+                'status' => false,
+                'message' => '授权码: ' . $data['code'] . ' 已被禁用',
+            ]);
+        }
+
+        return Redirect::back()->with('search', [
+            'status' => true,
+            'message' => '授权码: ' . $data['code'] . ' 还未激活，可正常使用',
         ]);
     }
 

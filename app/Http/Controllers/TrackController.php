@@ -7,11 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 class TrackController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($code)
     {
         $code = \App\Models\Code::where('code', $code)->first();
@@ -24,6 +19,10 @@ class TrackController extends Controller
         }
         // 判断是否过期
         if($code->expired_at < \Carbon\Carbon::now()) {
+            return null;
+        }
+        // 授权码已被禁用
+        if(!$code->status) {
             return null;
         }
 

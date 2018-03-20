@@ -26,7 +26,7 @@
                     <div class="card-header"><span class="float-left">会员中心</span><a class="float-right" href="javascript:void(0)" onclick="history.back();">返回</a></div>
 
                     <div class="card-body">
-                        欢迎您的回来，技术支持QQ: <strong class="text-danger">624508914</strong>
+                        欢迎您的回来，如有需要授权码，请联系代理商！
                     </div>
                 </div>
 
@@ -34,7 +34,6 @@
                     <div class="card-header">定位中心 > 定位链接 > 定位记录 > 详情</div>
 
                     <div class="card-body">
-                        <p><strong>记录编号：</strong><span class="text-danger">{{$visit->id}}</span></p>
                         <p><strong>IP地址：</strong><span class="text-danger">{{$visit->ip}}</span></p>
                         <p>
                             <strong>运营商：</strong>

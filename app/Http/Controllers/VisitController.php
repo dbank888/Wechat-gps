@@ -17,6 +17,11 @@ class VisitController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * 查看定位记录详情
+     * @param $id
+     * @return $this
+     */
     public function show($id) {
         $visit = \App\Models\Visit::where('id', $id)->where('user_id', Auth::id())->first();
         if(!$visit) {
@@ -36,6 +41,12 @@ class VisitController extends Controller
         return view('visit')->with('visit', $visit);
     }
 
+    /**
+     * 调用地图插件
+     * @param $x
+     * @param $y
+     * @return $this
+     */
     public function map($x, $y) {
         return view('map')->with('location', [
             'x' => $x,

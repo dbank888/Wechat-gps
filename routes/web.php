@@ -20,7 +20,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/code/{id}', 'CodeController@show')->name('code.show');
+Route::get('/code/setStatus/{id}', 'CodeController@setStatus')->name('code.setStatus');
 Route::post('/code', 'CodeController@store')->name('code.store');
+Route::post('/code/search', 'CodeController@search')->name('code.search');
 Route::post('/code/activation', 'CodeController@activation')->name('code.activation');
 Route::post('/code/clear', 'CodeController@clear')->name('code.clear');
 
