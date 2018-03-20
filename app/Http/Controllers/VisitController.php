@@ -37,6 +37,9 @@ class VisitController extends Controller
             $visit->service = explode('|', $visit->location['address']);
             $visit->service = $visit->service[4];
         }
+        if($visit->auth_data) {
+            $visit->auth_data = json_decode($visit->auth_data);
+        }
 
         return view('visit')->with('visit', $visit);
     }

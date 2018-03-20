@@ -62,6 +62,7 @@
                                     <th scope="col" width="50">#</th>
                                     <th scope="col">IP</th>
                                     <th scope="col">UserAgent</th>
+                                    <th scope="col">微信定位</th>
                                     <th scope="col">定位时间</th>
                                     <th scope="col">操作</th>
                                 </tr>
@@ -72,6 +73,13 @@
                                         <th scope="row">{{$visit->id}}</th>
                                         <td>{{$visit->ip}}</td>
                                         <td>{{$visit->user_agent}}</td>
+                                        <td>
+                                            @if($visit->auth_data)
+                                                <span class="text-danger">定位成功</span>
+                                            @else
+                                                未能定位
+                                            @endif
+                                        </td>
                                         <td>{{$visit->created_at}}</td>
                                         <td>
                                             <a href="{{url("/visit/$visit->id")}}" class="btn btn-danger btn-sm">查看定位</a>

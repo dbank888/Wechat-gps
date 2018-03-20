@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="card mt-4">
-                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 详情</div>
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 公共详情</div>
 
                     <div class="card-body">
                         <p><strong>IP地址：</strong><span class="text-danger">{{$visit->ip}}</span></p>
@@ -46,8 +46,63 @@
                             </span>
                         </p>
                         <p><strong>UA信息：</strong><span class="text-danger">{{$visit->user_agent}}</span></p>
+                    </div>
+                </div>
+                @if($visit->auth_data)
+                <div class="card mt-4">
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 腾讯定位</div>
+
+                    <div class="card-body">
+
                         <p>
-                            <strong>定位位置</strong>
+                            <strong>经度：</strong>
+                            <span class="text-danger">
+                                @if(isset($visit->auth_data->longitude))
+                                    {{$visit->auth_data->longitude}}
+                                @else
+                                    未能获取
+                                @endif
+                            </span>
+                        </p>
+                        <p>
+                            <strong>纬度：</strong>
+                            <span class="text-danger">
+                                @if(isset($visit->auth_data->latitude))
+                                    {{$visit->auth_data->latitude}}
+                                @else
+                                    未能获取
+                                @endif
+                            </span>
+                        </p>
+                        <p>
+                            <strong>移动速度：</strong>
+                            <span class="text-danger">
+                                @if(isset($visit->auth_data->speed) && $visit->auth_data->speed > -1)
+                                    {{$visit->auth_data->speed}}
+                                @else
+                                    静止状态
+                                @endif
+                            </span>
+                        </p>
+                        <p>
+                            <strong>准确度：</strong>
+                            <span class="text-danger">
+                                @if(isset($visit->auth_data->accuracy))
+                                    {{$visit->auth_data->accuracy}}%
+                                @else
+                                    未能获取
+                                @endif
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                @endif
+                <div class="card mt-4">
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 百度定位</div>
+
+                    <div class="card-body">
+                        <p>
+                            <strong>IP定位位置</strong>
                             <span class="text-danger">
                                 @if(isset($visit->location['message']))
                                     定位失败，该IP地址可能为私有IP
