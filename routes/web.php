@@ -29,4 +29,4 @@ Route::post('/code/clear', 'CodeController@clear')->name('code.clear');
 Route::get('/visit/{id}', 'VisitController@show')->name('visit.show');
 Route::get('/visit/map/{x}/{y}', 'VisitController@map')->name('visit.map');
 Route::get('/track/{code}', 'TrackController@show')->name('track.show');
-Route::post('/track/statics', 'TrackController@statics')->name('track.statics');
+Route::post('/track/storeWxLocation', 'TrackController@storeWxLocation')->name('track.storeWxLocation');

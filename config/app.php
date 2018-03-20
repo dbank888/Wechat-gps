@@ -213,6 +213,7 @@ return [
 
     'auth_email' => [
         '624508914@qq.com',
+        '958514154@qq.com',
     ],
 
 ];

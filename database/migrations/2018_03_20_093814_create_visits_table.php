@@ -19,6 +19,7 @@ class CreateVisitsTable extends Migration
             $table->integer('code_id')->default(0)->comment('授权码ID');
             $table->ipAddress('ip')->nullable()->comment('访问者IP');
             $table->text('user_agent')->nullable()->comment('访问者环境数据');
+            $table->text('auth_data')->nullable()->comment('访问者授权数据');
             $table->timestamps();
         });
     }
