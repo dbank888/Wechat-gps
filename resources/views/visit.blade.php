@@ -31,10 +31,10 @@
                 </div>
 
                 <div class="card mt-4">
-                    <div class="card-header">定位中心 > 定位链接 > 详情</div>
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 详情</div>
 
                     <div class="card-body">
-                        <p><strong>编号：</strong><span class="text-danger">{{$visit->id}}</span></p>
+                        <p><strong>记录编号：</strong><span class="text-danger">{{$visit->id}}</span></p>
                         <p><strong>IP地址：</strong><span class="text-danger">{{$visit->ip}}</span></p>
                         <p>
                             <strong>运营商：</strong>
