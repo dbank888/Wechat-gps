@@ -27,6 +27,14 @@ class TrackController extends Controller
             return null;
         }
 
+        if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'wifi') === false) {
+//            return null;
+        }
+
+        if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'micromessenger') === false) {
+//            return null;
+        }
+
         \App\Models\Visit::create([
             'user_id' => $code->user_id,
             'code_id' => $code->id,
