@@ -13,7 +13,7 @@
 <body>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.0&ak=yogxH1g0VzghVO38jG0jF1CEFuNpjyiR&services=&t=20170517145936"></script>
 <!--百度地图容器-->
-<div style="width:100%;box-sizing:border-box;height:300px;border:#ccc solid 1px;font-size:12px" id="allmap"></div>
+<div style="width:100%;box-sizing:border-box;height:500px;border:#ccc solid 1px;font-size:12px" id="allmap"></div>
 <script type="text/javascript">
     // 百度地图API功能
     var map = new BMap.Map("allmap");

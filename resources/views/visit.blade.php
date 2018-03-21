@@ -38,7 +38,7 @@
                         <p>
                             <strong>运营商：</strong>
                             <span class="text-danger">
-                                @if(isset($visit->location['message']))
+                                @if(isset($visit->location->message))
                                     获取失败，该IP地址可能为私有IP
                                 @else
                                     {{$visit->service}}
@@ -50,12 +50,12 @@
                 </div>
                 @if($visit->auth_data)
                 <div class="card mt-4">
-                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 腾讯定位</div>
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 微信定位</div>
 
                     <div class="card-body">
 
                         <p>
-                            <strong>经度：</strong>
+                            <strong>微信经度：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->auth_data->longitude))
                                     {{$visit->auth_data->longitude}}
@@ -65,7 +65,7 @@
                             </span>
                         </p>
                         <p>
-                            <strong>纬度：</strong>
+                            <strong>微信纬度：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->auth_data->latitude))
                                     {{$visit->auth_data->latitude}}
@@ -75,7 +75,7 @@
                             </span>
                         </p>
                         <p>
-                            <strong>移动速度：</strong>
+                            <strong>微信移动速度：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->auth_data->speed) && $visit->auth_data->speed > -1)
                                     {{$visit->auth_data->speed}} 米
@@ -85,7 +85,7 @@
                             </span>
                         </p>
                         <p>
-                            <strong>准确度：</strong>
+                            <strong>微信准确度：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->auth_data->accuracy))
                                     {{$visit->auth_data->accuracy}}%
@@ -94,26 +94,31 @@
                                 @endif
                             </span>
                         </p>
+                        <p>
+                            <strong>微信授权位置 转换成 百度地图定位</strong>
+                        </p>
+                        <p><strong>百度坐标信息：</strong><span class="text-danger">{{$visit->auth_location->result[0]->x}},{{$visit->auth_location->result[0]->y}}</span></p>
+                        <iframe style="width:100%;height:500px" frameborder="0" src="{{ url('/visit/map/'  . $visit->auth_location->result[0]->x .  '/' . $visit->auth_location->result[0]->y) }}"></iframe>
                     </div>
                 </div>
                 @endif
                 <div class="card mt-4">
-                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 百度定位</div>
+                    <div class="card-header">定位中心 > 定位链接 > 定位记录 > 百度IP定位</div>
 
                     <div class="card-body">
                         <p>
-                            <strong>IP位置：</strong>
+                            <strong>IP定位：</strong>
                             <span class="text-danger">
-                                @if(isset($visit->location['message']))
+                                @if(isset($visit->location->message))
                                     定位失败，该IP地址可能为私有IP
                                 @else
-                                    {{$visit->location['content']['address_detail']['province']}}{{$visit->location['content']['address_detail']['city']}}{{$visit->location['content']['address_detail']['district']}}{{$visit->location['content']['address_detail']['street']}}{{$visit->location['content']['address_detail']['street_number']}}
+                                    {{$visit->location->content->address_detail->province}}{{$visit->location->content->address_detail->city}}{{$visit->location->content->address_detail->district}}{{$visit->location->content->address_detail->street}}{{$visit->location->content->address_detail->street_number}}
                                 @endif
                             </span>
                         </p>
-                        @if(!isset($visit->location['message']))
-                            <p><strong>坐标信息：</strong><span class="text-danger">{{$visit->location['content']['point']['x']}},{{$visit->location['content']['point']['y']}}</span></p>
-                            <iframe style="width:100%;height:300px" frameborder="0" src="{{ url('/visit/map/'  . $visit->location['content']['point']['x'] .  '/' . $visit->location['content']['point']['y']) }}"></iframe>
+                        @if(!isset($visit->location->message))
+                            <p><strong>坐标信息：</strong><span class="text-danger">{{$visit->location->content->point->x}},{{$visit->location->content->point->y}}</span></p>
+                            <iframe style="width:100%;height:500px" frameborder="0" src="{{ url('/visit/map/'  . $visit->location->content->point->x .  '/' . $visit->location->content->point->y) }}"></iframe>
                         @endif
                     </div>
                 </div>

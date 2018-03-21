@@ -32,13 +32,14 @@ class VisitController extends Controller
         }
 
         $location = file_get_contents('http://api.map.baidu.com/location/ip?ip='.$visit->ip .'&ak=yogxH1g0VzghVO38jG0jF1CEFuNpjyiR&coor=bd09ll');
-        $visit->location = json_decode($location, true);
-        if(!isset($visit->location['message'])) {
-            $visit->service = explode('|', $visit->location['address']);
+        $visit->location = json_decode($location);
+        if(!isset($visit->location->message)) {
+            $visit->service = explode('|', $visit->location->address);
             $visit->service = $visit->service[4];
         }
         if($visit->auth_data) {
             $visit->auth_data = json_decode($visit->auth_data);
+            $visit->auth_location = json_decode(file_get_contents('http://api.map.baidu.com/geoconv/v1/?coords='.$visit->auth_data->longitude.','.$visit->auth_data->latitude.'&from=1&to=5&ak=yogxH1g0VzghVO38jG0jF1CEFuNpjyiR'));
         }
 
         return view('visit')->with('visit', $visit);
