@@ -78,7 +78,7 @@
                             <strong>移动速度：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->auth_data->speed) && $visit->auth_data->speed > -1)
-                                    {{$visit->auth_data->speed}}
+                                    {{$visit->auth_data->speed}} 米
                                 @else
                                     静止状态
                                 @endif
@@ -102,7 +102,7 @@
 
                     <div class="card-body">
                         <p>
-                            <strong>IP定位位置</strong>
+                            <strong>IP位置：</strong>
                             <span class="text-danger">
                                 @if(isset($visit->location['message']))
                                     定位失败，该IP地址可能为私有IP

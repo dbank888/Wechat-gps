@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+    var loading = false;
+    function handleLoading() {
+        if(loading) {
+            return false;
+        }
+        loading = true;
+        return true;
+    }
+</script>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -35,32 +45,51 @@
                     <div class="card-header">生成授权码</div>
 
                     <div class="card-body">
-                        <script>
-                            var loading = false;
-                            function handleLoading() {
-                                if(loading) {
-                                    return false;
-                                }
-                                loading = true;
-                                return true;
-                            }
-                        </script>
                         <form method="POST" action="{{ route('code.store') }}" onsubmit="return handleLoading()">
                             @csrf
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <select class="custom-select" name="type">
-                                        <option selected>请选择类型</option>
+                                    <select class="custom-select" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" name="type" required>
+                                        <option selected>类型</option>
                                         <option value="day">天卡</option>
                                         <option value="week">周卡</option>
                                         <option value="month">月卡</option>
                                         <option value="year">年卡</option>
                                     </select>
                                 </div>
-                                <input type="number" class="form-control" name="number" placeholder="数量">
+                                <input type="number" class="form-control" name="number" placeholder="数量" required>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="submit">立即生成</button>
+                                    <button class="btn btn-outline-secondary" type="submit">生成</button>
                                 </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">授权码列表</div>
+
+                    <div class="card-body">
+                        <form class="mb-4" method="POST">
+                            @csrf
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label>激活开始时间</label>
+                                    <input type="text" class="form-control" placeholder="例：2018-03-21 00:00:00" name="search[start_used_at]">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>激活结束时间</label>
+                                    <input type="text" class="form-control" placeholder="例：2018-03-21 23:59:59" name="search[end_used_at]">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>激活状态</label>
+                                    <select class="custom-select" name="search[status]">
+                                        <option value="all">全部</option>
+                                        <option value="0">待激活</option>
+                                        <option value="1">已激活</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary btn-block disabled" type="button">暂时禁用搜索</button>
                             </div>
                         </form>
 
@@ -71,7 +100,9 @@
                                         <th scope="col" width="50">#</th>
                                         <th scope="col">类型</th>
                                         <th scope="col">状态</th>
-                                        <th scope="col">激活</th>
+                                        <th scope="col">激活用户</th>
+                                        <th scope="col">激活时间</th>
+                                        <th scope="col">生成用户</th>
                                         <th scope="col">授权码</th>
                                         <th scope="col">操作</th>
                                     </tr>
@@ -90,9 +121,23 @@
                                         </td>
                                         <td>
                                             @if($code->user_id)
-                                                <span class="badge badge-danger">已使用</span>
+                                                <span class="badge badge-danger">{{$code->user_info->name}}</span>
                                             @else
-                                                <span class="badge badge-primary">待使用</span>
+                                                <span class="badge badge-primary">待激活</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($code->used_at)
+                                                {{$code->used_at}}
+                                            @else
+                                                --
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($code->created_user_id)
+                                                <span class="badge badge-danger">{{$code->created_user_info->name}}</span>
+                                            @else
+                                                --
                                             @endif
                                         </td>
                                         <td>
@@ -140,9 +185,9 @@
                     <form method="POST" action="{{ route('code.activation') }}" onsubmit="return handleLoading()">
                         @csrf
                         <div class="input-group">
-                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码">
+                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码" required>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit">立即激活</button>
+                                <button class="btn btn-outline-secondary" type="submit">激活</button>
                             </div>
                         </div>
                     </form>
@@ -174,9 +219,9 @@
                     <form method="POST" action="{{ route('code.search') }}" onsubmit="return handleLoading()">
                         @csrf
                         <div class="input-group">
-                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码">
+                            <input type="text" class="form-control" name="code" placeholder="输入您的授权码" required>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit">立即查询</button>
+                                <button class="btn btn-outline-secondary" type="submit">查询</button>
                             </div>
                         </div>
                     </form>

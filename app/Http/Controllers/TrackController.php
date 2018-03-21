@@ -14,15 +14,15 @@ class TrackController extends Controller
         }
         // 判断是否激活
         if(!$code->user_id) {
-            return null;
+            return 'not activation';
         }
         // 判断是否过期
         if($code->expired_at < \Carbon\Carbon::now()) {
-            return null;
+            return 'expired';
         }
         // 授权码已被禁用
         if(!$code->status) {
-            return null;
+            return 'disabled';
         }
 
         $config = [
@@ -65,15 +65,15 @@ class TrackController extends Controller
         }
         // 判断是否激活
         if(!$code->user_id) {
-            return null;
+            return 'not activation';
         }
         // 判断是否过期
         if($code->expired_at < \Carbon\Carbon::now()) {
-            return null;
+            return 'expired';
         }
         // 授权码已被禁用
         if(!$code->status) {
-            return null;
+            return 'disabled';
         }
 
         \App\Models\Visit::create([
@@ -83,6 +83,6 @@ class TrackController extends Controller
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
             'auth_data' => json_encode($data, true),
         ]);
-        return null;
+        return 'success';
     }
 }
