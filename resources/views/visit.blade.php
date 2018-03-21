@@ -74,26 +74,26 @@
                                 @endif
                             </span>
                         </p>
-                        <p>
-                            <strong>微信移动速度：</strong>
-                            <span class="text-danger">
-                                @if(isset($visit->auth_data->speed) && $visit->auth_data->speed > -1)
-                                    {{$visit->auth_data->speed}} 米
-                                @else
-                                    静止状态
-                                @endif
-                            </span>
-                        </p>
-                        <p>
-                            <strong>微信准确度：</strong>
-                            <span class="text-danger">
-                                @if(isset($visit->auth_data->accuracy))
-                                    {{$visit->auth_data->accuracy}}%
-                                @else
-                                    未能获取
-                                @endif
-                            </span>
-                        </p>
+                        {{--<p>--}}
+                            {{--<strong>微信移动速度：</strong>--}}
+                            {{--<span class="text-danger">--}}
+                                {{--@if(isset($visit->auth_data->speed) && $visit->auth_data->speed > -1)--}}
+                                    {{--{{$visit->auth_data->speed}} 米--}}
+                                {{--@else--}}
+                                    {{--静止状态--}}
+                                {{--@endif--}}
+                            {{--</span>--}}
+                        {{--</p>--}}
+                        {{--<p>--}}
+                            {{--<strong>微信准确度：</strong>--}}
+                            {{--<span class="text-danger">--}}
+                                {{--@if(isset($visit->auth_data->accuracy))--}}
+                                    {{--{{$visit->auth_data->accuracy}}%--}}
+                                {{--@else--}}
+                                    {{--未能获取--}}
+                                {{--@endif--}}
+                            {{--</span>--}}
+                        {{--</p>--}}
                         <p>
                             <strong>微信授权位置 转换成 百度地图定位</strong>
                         </p>
