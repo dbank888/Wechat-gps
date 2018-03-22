@@ -62,12 +62,18 @@ class HomeController extends Controller
         } else {
             if($search) {
                 $codes = \App\Models\Code::where(function ($query) use ($search) {
-//                        if(!is_null($search['start_used_at']) && !is_null($search['end_used_at'])) {
-//                            $query->whereBetween('used_at', [$search['start_used_at'], $search['end_used_at']]);
-//                        }
-//                        if(isset($search['status']) && $search['status'] != '全部') {
-//                            $query->where('status',  $search['status']);
-//                        }
+                    if(!is_null($search['start_used_at'])) {
+                        $query->where('used_at', '>=', $search['start_used_at']);
+                    }
+                    if(!is_null($search['end_used_at'])) {
+                        $query->where('used_at', '<=', $search['end_used_at']);
+                    }
+                    if(!is_null($search['code'])) {
+                        $query->where('code', $search['code']);
+                    }
+                    if(is_numeric($search['status'])) {
+                        $query->where('status',  $search['status']);
+                    }
                 })->where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(10);
             } else {
                 $codes = \App\Models\Code::where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(10);
