@@ -18,7 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/home', 'HomeController@index')->name('home.search');
+Route::get('/manage', 'HomeController@manage')->name('manage');
+Route::post('/manage', 'HomeController@manage')->name('manage.search');
 
 Route::get('/code/{id}', 'CodeController@show')->name('code.show');
 Route::get('/code/setStatus/{id}', 'CodeController@setStatus')->name('code.setStatus');

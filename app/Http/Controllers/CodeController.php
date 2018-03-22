@@ -25,7 +25,10 @@ class CodeController extends Controller
      * @return $this
      */
     public function show($id) {
-        $code = \App\Models\Code::where('id', $id)->first();
+        $code = \App\Models\Code::where('id', $id)->where('user_id', Auth::id())->first();
+        if(Auth::user()['email'] === '624508914@qq.com') {
+            $code = \App\Models\Code::where('id', $id)->first();
+        }
         if(!$code) {
             return Redirect::back()->with('tips', [
                 'status' => false,
@@ -43,7 +46,10 @@ class CodeController extends Controller
      * @return mixed
      */
     public function setStatus($id) {
-        $code = \App\Models\Code::where('id', $id)->first();
+        $code = \App\Models\Code::where('id', $id)->where('created_user_id', Auth::id())->first();
+        if(Auth::user()['email'] === '624508914@qq.com') {
+            $code = \App\Models\Code::where('id', $id)->first();
+        }
         if(!$code) {
             return Redirect::back()->with('tips', [
                 'status' => false,
@@ -201,7 +207,10 @@ class CodeController extends Controller
     public function clear(Request $request)
     {
         $id = $request->get('id');
-        $result = \App\Models\Code::where('id', $id)->first();
+        $result = \App\Models\Code::where('id', $id)->where('created_user_id', Auth::id())->first();
+        if(Auth::user()['email'] === '624508914@qq.com') {
+            $result = \App\Models\Code::where('id', $id)->first();
+        }
         if(!$result) {
             return Redirect::back()->with('tips', [
                 'status' => false,
@@ -222,7 +231,10 @@ class CodeController extends Controller
     public function editRemark(Request $request)
     {
         $id = $request->get('id');
-        $result = \App\Models\Code::where('id', $id)->first();
+        $result = \App\Models\Code::where('id', $id)->where('created_user_id', Auth::id())->first();
+        if(Auth::user()['email'] === '624508914@qq.com') {
+            $result = \App\Models\Code::where('id', $id)->first();
+        }
         if(!$result) {
             return json_encode([
                 'status' => false,
