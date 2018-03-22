@@ -31,15 +31,15 @@ class HomeController extends Controller
             if(Auth::user()['email'] === '624508914@qq.com') {
                 if($search) {
                     $dataset['codes'] = \App\Models\Code::where(function ($query) use ($search) {
-//                        if(!is_null($search['start_used_at']) && !is_null($search['end_used_at'])) {
-//                            $query->whereBetween('used_at', [$search['start_used_at'], $search['end_used_at']]);
-//                        }
-//                        if(isset($search['status']) && $search['status'] != '全部') {
-//                            $query->where('status',  $search['status']);
-//                        }
-                    })->orderBy('id', 'desc')->paginate(50, ['*'], 'c_page');
+                        if(!is_null($search['start_used_at']) && !is_null($search['end_used_at'])) {
+                            $query->whereBetween('used_at', [$search['start_used_at'], $search['end_used_at']]);
+                        }
+                        if(isset($search['status']) && $search['status'] != '全部') {
+                            $query->where('status',  $search['status']);
+                        }
+                    })->orderBy('id', 'desc')->paginate(20, ['*'], 'c_page');
                 } else {
-                    $dataset['codes'] = \App\Models\Code::orderBy('id', 'desc')->paginate(50, ['*'], 'c_page');
+                    $dataset['codes'] = \App\Models\Code::orderBy('id', 'desc')->paginate(20, ['*'], 'c_page');
                 }
             } else {
                 if($search) {
@@ -50,9 +50,9 @@ class HomeController extends Controller
 //                        if(isset($search['status']) && $search['status'] != '全部') {
 //                            $query->where('status',  $search['status']);
 //                        }
-                    })->where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(5, ['*'], 'c_page');
+                    })->where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(20, ['*'], 'c_page');
                 } else {
-                    $dataset['codes'] = \App\Models\Code::where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(5, ['*'], 'c_page');
+                    $dataset['codes'] = \App\Models\Code::where('created_user_id', Auth::id())->orderBy('id', 'desc')->paginate(20, ['*'], 'c_page');
                 }
             }
             foreach($dataset['codes'] as $k => $v) {

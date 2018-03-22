@@ -88,6 +88,7 @@ class CodeController extends Controller
         for($i = 0; $i < $data['number']; $i++) {
             $result = \App\Models\Code::create([
                 'type' => $data['type'],
+                'remark' => $data['remark'],
                 'code' => md5(time() . Str::random(32) . Str::random(32) . Str::random(32) . time()),
                 'created_user_id' => Auth::id(),
             ]);
@@ -210,6 +211,33 @@ class CodeController extends Controller
         \App\Models\Visit::where('code_id', $id)->where('user_id', Auth::id())->delete();
 
         return Redirect::back()->with('tips', [
+            'status' => true,
+            'message' => '成功',
+        ]);
+    }
+
+    /**
+     * 编辑备注
+     */
+    public function editRemark(Request $request)
+    {
+        $id = $request->get('id');
+        $result = \App\Models\Code::where('id', $id)->first();
+        if(!$result) {
+            return json_encode([
+                'status' => false,
+                'message' => '定位链接不存在',
+            ]);
+        }
+        $result->remark = $request->get('remark');
+        if(!$result->save()) {
+            return json_encode([
+                'status' => false,
+                'message' => '失败',
+            ]);
+        }
+
+        return json_encode([
             'status' => true,
             'message' => '成功',
         ]);

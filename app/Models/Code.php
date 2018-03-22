@@ -8,7 +8,7 @@ class Code extends Model
 {
     // 可填充字段
     protected $fillable = [
-        'user_id', 'type', 'code', 'status', 'used_at', 'expired_at', 'created_user_id',
+        'user_id', 'type', 'code', 'remark', 'status', 'used_at', 'expired_at', 'created_user_id',
     ];
 
     public $appends = [

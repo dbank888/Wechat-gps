@@ -48,16 +48,15 @@
                         <form method="POST" action="{{ route('code.store') }}" onsubmit="return handleLoading()">
                             @csrf
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <select class="custom-select" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" name="type" required>
-                                        <option selected>类型</option>
-                                        <option value="day">天卡</option>
-                                        <option value="week">周卡</option>
-                                        <option value="month">月卡</option>
-                                        <option value="year">年卡</option>
-                                    </select>
-                                </div>
+                                <select class="custom-select" style="width:30px;" name="type" required>
+                                    <option selected>类型</option>
+                                    <option value="day">天卡</option>
+                                    <option value="week">周卡</option>
+                                    <option value="month">月卡</option>
+                                    <option value="year">年卡</option>
+                                </select>
                                 <input type="number" class="form-control" name="number" placeholder="数量" required>
+                                <input type="text" class="form-control" name="remark" placeholder="备注">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="submit">生成</button>
                                 </div>
@@ -93,15 +92,74 @@
                             </div>
                         </form>
 
+                        <script>
+                            function editRemark(id, remark) {
+                                remark = typeof remark === 'undefined' ? '' : remark;
+                                layer.open({
+                                    title: "编辑备注",
+                                    content: "<textarea class='editRemark' style='width: 100%;height: 50px;padding: 10px 0;border: 1px dashed #ccc;'>" + remark + "</textarea>",
+                                    btn: ['确认', '取消'],
+                                    yes: function(index) {
+                                        $.ajax({
+                                            url: "{{url('/code/editRemark')}}",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: {id: id, remark: $('.editRemark').val()},
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            success: function(res) {
+                                                alert(res.message)
+                                                if(res.status) {
+                                                    location.reload();
+                                                }
+                                            }
+                                        })
+                                    }
+                                });
+                            }
+                            function selectAllBox(obj) {
+                                $(".select-checkbox").each(function(i) {
+                                    $(".select-checkbox").eq(i).prop("checked", $(obj).prop('checked'));
+                                });
+                            }
+                            function selectCheckBox(obj) {
+                                $(".select-all").prop('checked', false);
+                            }
+                        </script>
+                        <div><button class="btn btn-primary btn-block batch-copy">复制选中的授权码</button></div>
+                        <script>
+                            var batchCopyClipboard = new ClipboardJS('.batch-copy', {
+                                text: function() {
+                                    var text = '';
+                                    $(".select-checkbox").each(function(i) {
+                                        var item = $(".select-checkbox").eq(i);
+                                        if(item.prop("checked")) {
+                                            text += item.data('value') + "\n";
+                                        }
+                                    });
+                                    text = text.substr(0, text.length-1);
+                                    if(!text) {
+                                        alert('没有选中要复制的');
+                                    }
+                                    return text;
+                                }
+                            });
+                            batchCopyClipboard.on('success', function(e) {
+                                alert('复制成功');
+                            });
+                        </script>
                         <div class="table-responsive">
                             <table class="table mt-4">
                                 <thead class="thead-light">
                                     <tr>
+                                        <th scope="col" width="50"><input type="checkbox" class="select-all" onchange="selectAllBox(this)" /></th>
                                         <th scope="col" width="50">#</th>
                                         <th scope="col">类型</th>
                                         <th scope="col">状态</th>
                                         <th scope="col">激活用户</th>
                                         <th scope="col">激活时间</th>
+                                        <th scope="col">生成备注</th>
                                         <th scope="col">生成用户</th>
                                         <th scope="col">授权码</th>
                                         <th scope="col">操作</th>
@@ -110,7 +168,8 @@
                                 <tbody>
                                     @foreach ($dataset['codes'] as $code)
                                     <tr>
-                                        <th scope="row">{{$code->id}}</th>
+                                        <th scope="col"><input type="checkbox" class="select-checkbox" onchange="selectCheckBox(this)" data-value="{{ $code->code }}" /></th>
+                                        <th scope="col">{{$code->id}}</th>
                                         <td>{{$code->type_name}}</td>
                                         <td>
                                             @if($code->status)
@@ -131,6 +190,13 @@
                                                 {{$code->used_at}}
                                             @else
                                                 --
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($code->remark)
+                                                <span class="badge badge-danger" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">{{$code->remark}}</span>
+                                            @else
+                                                <span class="badge badge-primary" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">新增备注</span>
                                             @endif
                                         </td>
                                         <td>

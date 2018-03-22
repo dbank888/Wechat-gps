@@ -26,6 +26,7 @@ Route::post('/code', 'CodeController@store')->name('code.store');
 Route::post('/code/search', 'CodeController@search')->name('code.search');
 Route::post('/code/activation', 'CodeController@activation')->name('code.activation');
 Route::post('/code/clear', 'CodeController@clear')->name('code.clear');
+Route::post('/code/editRemark', 'CodeController@editRemark')->name('code.editRemark');
 
 Route::get('/visit/{id}', 'VisitController@show')->name('visit.show');
 Route::get('/visit/map/{x}/{y}', 'VisitController@map')->name('visit.map');
