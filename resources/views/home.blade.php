@@ -194,9 +194,9 @@
                                         </td>
                                         <td>
                                             @if($code->remark)
-                                                <span class="badge badge-danger" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">{{$code->remark}}</span>
+                                                <span class="badge badge-success" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">{{$code->remark}}</span>
                                             @else
-                                                <span class="badge badge-primary" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">新增备注</span>
+                                                <span class="badge badge-info" onclick="editRemark({{$code->id}}, '{{$code->remark}}')">新增备注</span>
                                             @endif
                                         </td>
                                         <td>
